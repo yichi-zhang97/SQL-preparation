@@ -6,3 +6,4 @@ This respository contains my preparation for SQL work, mainly from the take-home
   3. Identify power users based on their history
   4. Estimate total and running values
   5. Summary stats - Custom implementation of the median vs average
+  6. Time difference between different activities
