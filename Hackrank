@@ -1,6 +1,6 @@
 Hackrank Medium
 
-1. The PADS
+##1. The PADS
 select concat(Name,'(',left(Occupation,1),')')
 from OCCUPATIONS
 order by Name;
@@ -9,7 +9,7 @@ from OCCUPATIONS
 group by Occupation
 order by count(Occupation),Occupation;
 
-2. Occupations
+##2. Occupations
 with w1 as(
 select Name, Occupation, rank()over(partition by Occupation order by Name) as rank
 from OCCUPATIONS
@@ -36,3 +36,11 @@ select doctor, professor, singer, actor
 from w5
 
 
+##3.Binary Tree nodes
+select N, case 
+when P is null then 'Root'
+when N  in (select P from BST) then 'Inner'
+else 'Leaf'
+end as title
+from BST
+order by N
