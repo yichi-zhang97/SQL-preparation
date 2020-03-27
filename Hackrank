@@ -44,3 +44,17 @@ else 'Leaf'
 end as title
 from BST
 order by N
+
+##4.New companies
+with w1 as(
+select company_code,
+        count(distinct(lead_manager_code)) as lead_manager_code,
+        count(distinct(senior_manager_code)) as senior_manager_code,
+        count(distinct(manager_code)) as manager_code,
+        count(distinct(employee_code)) as employee_code
+from Employee
+group by company_code)
+select w1.company_code,founder, lead_manager_code,senior_manager_code,manager_code,employee_code
+from w1
+inner join Company
+on Company.company_code=w1.company_code
