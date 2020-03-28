@@ -102,3 +102,22 @@ select contest_id
 from w3
 where total_submissions=0 and total_accepted_submissions=0 and total_views=0and total_unique_views=0)
 order by contest_id
+
+##6.symmetric pairs
+with w1 as(
+select fun1.X as X,fun1.Y as Y,fun2.X as XX
+from Functions fun1
+inner join Functions fun2
+on fun1.Y=fun2.X
+where fun2.Y=fun1.X and fun1.X<=fun1.Y and fun1.X!=fun1.Y),
+w2 as(
+select X,Y
+from (select X,Y,COUNT(*) as total_count from Functions where X=Y group by X,Y) sub
+WHERE total_count>=2)
+
+select X,Y
+FROM W1
+UNION
+SELECT X,Y
+FROM W2
+order by X,Y
