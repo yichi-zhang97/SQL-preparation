@@ -228,3 +228,20 @@ inner join Hackers
 on Hackers.hacker_id=w2.hacker_id
 where num_count=1 or rank=1
 order by total_count desc,hacker_id
+
+
+##12.Ollivander's inventory
+with w1 as(
+select age,min(coins_needed) as coins_needed,power
+from Wands
+inner join Wands_Property
+on Wands.code=Wands_Property.code
+where is_evil=0
+group by age,power)
+select Wands.id, w1.age,w1.coins_needed,w1.power
+from w1
+inner join Wands_Property
+on w1.age=Wands_Property.age
+inner join Wands
+on Wands_Property.code=Wands.code and w1.coins_needed=Wands.coins_needed
+order by power desc,w1.age desc
