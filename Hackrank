@@ -121,3 +121,43 @@ UNION
 SELECT X,Y
 FROM W2
 order by X,Y
+
+### 15 days of learning SQL
+with w1 as(
+select hacker_id,Submission_date,
+    datediff(day,lag(Submission_date,1)over(partition by hacker_id order by Submission_date),Submission_date) as difference
+from Submissions
+group by hacker_id,Submission_date),
+w2 as(
+select hacker_id,Submission_date, difference,     
+        dense_rank()over(partition by hacker_id order by Submission_date) as rank,
+    max(difference) over(partition by hacker_id order by Submission_date range between unbounded PRECEDING and current row) as max_diff
+from w1
+where hacker_id in (select hacker_id from Submissions where Submission_date='2016-03-01')),
+w3 as(
+select Submission_date, count(*) as total_number
+from w2
+where max_diff=1 or max_diff is null
+group by Submission_date),
+w4 as(
+select Submission_date,hacker_id,count(*) as total
+from Submissions
+group by Submission_date,hacker_id),
+w5 as(
+select Submission_date,hacker_id,total,row_number()over(partition by Submission_date order by total desc, hacker_id) as rank_num
+from w4),
+w6 as(
+select Submission_date, w5.hacker_id as hacker_id,name
+from w5
+inner join Hackers
+on w5.hacker_id=Hackers.hacker_id
+where rank_num=1)
+
+select w3.Submission_date, total_number,hacker_id,name
+from w3
+inner join w6
+on w6.Submission_date=w3.Submission_date
+order by Submission_date
+
+
+
