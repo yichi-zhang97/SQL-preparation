@@ -122,7 +122,7 @@ SELECT X,Y
 FROM W2
 order by X,Y
 
-### 15 days of learning SQL
+### 7. 15 days of learning SQL
 with w1 as(
 select hacker_id,Submission_date,
     datediff(day,lag(Submission_date,1)over(partition by hacker_id order by Submission_date),Submission_date) as difference
@@ -160,7 +160,7 @@ on w6.Submission_date=w3.Submission_date
 order by Submission_date
 
 
-###Placements
+### 8. Placements
 select Name
 from Friends
 inner join Students
@@ -171,3 +171,26 @@ inner join Packages P2
 on P2.ID=Friends.Friend_ID
 where P1.Salary<P2.Salary
 order by P2.Salary
+
+
+## 9. SQL Project planning
+with w1 as(
+select Start_Date, difference, row_number()over(order by Start_Date) as row1
+from (
+select Start_Date,datediff(day,lag(Start_Date)over(order by Start_Date),start_Date) as difference
+from Projects) sub
+where difference is Null or difference!=1),
+w2 as
+(select End_Date, difference, row_number()over(order by End_Date) as row2
+from (
+select End_Date,datediff(day,End_Date,lead(End_Date)over(order by End_Date)) as difference
+from Projects) sub2
+where difference is Null or difference!=1)
+select Start_Date, End_Date
+from (
+select Start_Date,End_Date,datediff(day,Start_Date,End_Date) as new_diff
+from w1
+inner join w2
+on w1.row1=w2.row2) sub
+order by new_diff ,Start_Date
+
