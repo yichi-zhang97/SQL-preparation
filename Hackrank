@@ -211,3 +211,20 @@ select *
 from w2
 where score!=0
 order by score desc, hacker_id
+
+
+## 11.challenges
+with w1 as(
+select hacker_id, count(challenge_id) as total_count
+from Challenges
+group by hacker_id),
+w2 as (
+select hacker_id, total_count, count(*)over(partition by total_count) as num_count, dense_rank()over(order by total_count desc) as rank
+from w1)
+
+select w2.hacker_id,name,total_count
+from w2
+inner join Hackers
+on Hackers.hacker_id=w2.hacker_id
+where num_count=1 or rank=1
+order by total_count desc,hacker_id
