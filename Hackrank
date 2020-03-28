@@ -194,3 +194,20 @@ inner join w2
 on w1.row1=w2.row2) sub
 order by new_diff ,Start_Date
 
+
+## 10.Contest Leaderboard
+with w1 as(
+select hacker_id,challenge_id,max(score) as score
+from Submissions
+group by challenge_id, hacker_id),
+w2 as(
+select Hackers.hacker_id,name,sum(score) as score
+from Hackers
+inner join w1
+on w1.hacker_id=Hackers.hacker_id
+group by Hackers.hacker_id,name)
+
+select *
+from w2
+where score!=0
+order by score desc, hacker_id
