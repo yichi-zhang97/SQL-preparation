@@ -160,4 +160,14 @@ on w6.Submission_date=w3.Submission_date
 order by Submission_date
 
 
-
+###Placements
+select Name
+from Friends
+inner join Students
+on Friends.ID=Students.ID
+inner join Packages P1
+on P1.ID=Friends.ID 
+inner join Packages P2
+on P2.ID=Friends.Friend_ID
+where P1.Salary<P2.Salary
+order by P2.Salary
