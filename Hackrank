@@ -245,3 +245,30 @@ on w1.age=Wands_Property.age
 inner join Wands
 on Wands_Property.code=Wands.code and w1.coins_needed=Wands.coins_needed
 order by power desc,w1.age desc
+
+
+##13.Top companies
+with w1 as(
+select hacker_id,challenge_id,score_actual,difficulty_level,benchmark
+from (select Submissions.hacker_id as hacker_id, 
+        Submissions.challenge_id as challenge_id,
+        Submissions.score as score_actual,
+        Difficulty.difficulty_level as difficulty_level,
+        Difficulty.score as benchmark
+from Submissions
+inner join Challenges
+on Submissions.challenge_id=Challenges.challenge_id
+inner join Difficulty
+on Challenges.difficulty_level=Difficulty.difficulty_level)sub
+where score_actual=benchmark),
+w2 as(
+select hacker_id,count(challenge_id) as total_number
+from w1
+group by hacker_id)
+
+select w2.hacker_id,name
+from w2
+inner join Hackers
+on w2.hacker_id=Hackers.hacker_id
+where total_number>=2
+order by total_number desc, hacker_id
